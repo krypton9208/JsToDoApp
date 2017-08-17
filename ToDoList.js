@@ -11,29 +11,52 @@ document.onload = function(){
   var button = document.createElement('button');
   button.innerHTML = 'dodaj';
   button.onclick = function (e) {
-    addNewTask(document.getElementById('taskInput').value)
+    addNewTask(document.getElementById('taskInput').value, document.getElementById('selectedCategory').value);
   };
 
-  container.appendChild(input);
-  container.appendChild(button);
+  var select = document.createElement('select');
+  select.setAttribute('id', 'selectedCategory');
+
+  for (i = 0; i <  6; i++) {
+    select.options[i] = new Option('Kategoria ' + i, i);
+  }
+
+  var div = document.createElement('div');
+
+  div.appendChild(select);
+  div.appendChild(input);
+  div.appendChild(button);
+
+  container.appendChild(div);
 }();
 
 
-function addNewTask(name) {
-  if (document.getElementById('listOfTask') === null) {
-    var ul = document.createElement('ul');
-    ul.setAttribute('id', 'listOfTask');
+function addNewTask(name, categoryId) {
 
-    document.getElementById('listContainer').appendChild(ul)
+  if (document.getElementById('listOfTask'+ categoryId) === null) {
+    createNewList(categoryId)
   }
   var li = document.createElement('li');
   li.innerHTML = name;
-  li.onclick = removeTask
+  li.onclick = removeTask;
   document.getElementById('taskInput').value = '';
 
-  document.getElementById('listOfTask').appendChild(li);
+  document.getElementById('listOfTask'+ categoryId).appendChild(li);
 }
 
 function removeTask(e) {
   document.getElementById('listOfTask').removeChild(e.target)
+}
+
+function createNewList(categoryId) {
+  var div = document.createElement('div');
+  div.style = 'display: inline-block; margin-right: 15px;vertical-align: top;';
+  div.innerHTML = '<p>'+ 'Kategoria ' + categoryId + '</p>';
+  var ul = document.createElement('ul');
+  ul.setAttribute('id', 'listOfTask' + categoryId);
+  ul.setAttribute.innerHTML = 'Kategoria ' + categoryId;
+  ul.setAttribute('value', categoryId);
+
+  div.appendChild(ul);
+  document.getElementById('listContainer').appendChild(div);
 }
