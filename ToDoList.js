@@ -35,12 +35,17 @@ document.onload = function(){
 
 
 function addNewTask(name, categoryId) {
+  if (name.length < 3) return alert('Please enter title')
   if (document.getElementById('listOfTask'+ categoryId) === null) {
     createNewList(categoryId)
   }
   var li = document.createElement('li');
   li.innerHTML = name;
   li.onclick = removeTask;
+  li.ondragstart = drag;
+  li.setAttribute('id', name+categoryId+guid());
+  li.setAttribute('draggable', true);
+  li.setAttribute('droppable', false);
   document.getElementById('taskInput').value = '';
 
   document.getElementById('listOfTask'+ categoryId).appendChild(li);
@@ -64,7 +69,39 @@ function createNewList(categoryId) {
   ul.setAttribute('id', 'listOfTask' + categoryId);
   ul.setAttribute.innerHTML = 'Category ' + categoryId;
   ul.setAttribute('value', categoryId);
-
+  ul.ondrop=drop;
+  ul.ondragover=allowDrop;
   div.appendChild(ul);
   document.getElementById('listContainer').appendChild(div);
+}
+
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function drag(ev) {
+  ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev) {
+  ev.preventDefault();
+  if (ev.target.nodeName === 'LI')  {
+    var data = ev.dataTransfer.getData("text");
+    return ev.target.parentNode.appendChild(document.getElementById(data));
+
+  }
+
+  if (ev.target.nodeName !== 'UL') return alert('can not drop here');
+  var data = ev.dataTransfer.getData("text");
+  ev.target.appendChild(document.getElementById(data));
+}
+
+function guid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+    s4() + '-' + s4() + s4() + s4();
 }
