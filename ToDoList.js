@@ -45,13 +45,21 @@ function addNewTask(name, categoryId) {
 }
 
 function removeTask(e) {
-  document.getElementById('listOfTask').removeChild(e.target)
+  if (document.getElementById('listOfTask' + e.target.parentElement.getAttribute('value')).childElementCount === 1) {
+    document.getElementById('listContainer').removeChild(document.getElementById('listOfTask' + e.target.parentElement.getAttribute('value')).parentNode)
+  } else {
+    document.getElementById('listOfTask' + e.target.parentElement.getAttribute('value')).removeChild(e.target);
+
+  }
 }
 
 function createNewList(categoryId) {
+
   var div = document.createElement('div');
   div.style = 'display: inline-block; margin-right: 15px;vertical-align: top;';
   div.innerHTML = '<p>'+ 'Kategoria ' + categoryId + '</p>';
+  div.setAttribute('id', categoryId);
+
   var ul = document.createElement('ul');
   ul.setAttribute('id', 'listOfTask' + categoryId);
   ul.setAttribute.innerHTML = 'Kategoria ' + categoryId;
